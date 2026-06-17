@@ -54,7 +54,8 @@ export default function Home() {
     </button>
   </div> */}
   <ResumeUpload />
-      <ATSScoreCard/>
+      {/* <ATSScoreCard/> */}
+      <ATSScoreCard score={85} />
 
 </main>
     </>
