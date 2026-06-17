@@ -29,6 +29,19 @@ SKILLS_DATABASE = [
 ]
 
 
+# for comparing against any job profile
+#as of now, manually made, but will be extracted from the user when he uploads the JD
+
+
+JOB_SKILLS = [
+    "Python",
+    "React",
+    "FastAPI",
+    "Git",
+    "Docker",
+    "PostgreSQL",
+    "AWS"
+]
 
 
 
@@ -103,18 +116,49 @@ async def upload_resume(file: UploadFile):
     for skill in SKILLS_DATABASE:
         if skill.lower() in resume_text_lower:
             found_skills.append(skill)
+    
+    
+    #comparision against a specific profile
+    matched_skills = []
+
+    for skill in JOB_SKILLS:
+
+        if skill in found_skills:
+            matched_skills.append(skill)
+    
+    #missing skills:
+    missing_skills = []
+    for skill in JOB_SKILLS:
+        if skill not in found_skills:
+            missing_skills.append(skill)
     # return {
     #     "filename": file.filename,
     #     "text": extracted_text[:1000]
     # }
     
     
-    # updated return statements
+    # calculations of new parameters with thus arrived values
+    
+    ats_score = int(
+    (len(matched_skills) / len(JOB_SKILLS))
+    * 100
+)
     
     
+     # updated return statements
+#     return {
+#     "filename": file.filename,
+#     "skills_found": found_skills,
+#     "total_skills_found": len(found_skills)
+# }
+   
+   
+   
+   #more updated statements:
+   
     return {
     "filename": file.filename,
-    "skills_found": found_skills,
-    "total_skills_found": len(found_skills)
+    "ats_score": ats_score,
+    "matched_skills": matched_skills,
+    "missing_skills": missing_skills
 }
-   
