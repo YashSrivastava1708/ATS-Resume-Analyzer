@@ -18,7 +18,7 @@ export default function Home() {
     </main>
   );
 }*/
-
+import ATSScoreCard from "../components/ui/ATSScoreCard";
 import ResumeUpload from "../components/ui/ResumeUpload";
 
 import Navbar from "../components/layout/Navbar";
@@ -54,7 +54,7 @@ export default function Home() {
     </button>
   </div> */}
   <ResumeUpload />
-
+      <ATSScoreCard/>
 
 </main>
     </>
