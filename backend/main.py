@@ -1,9 +1,38 @@
 # from fastapi import FastAPI
 from pypdf import PdfReader
 from fastapi import FastAPI, UploadFile
+
+
+
+# skill dataset
+SKILLS_DATABASE = [
+    "Python",
+    "Java",
+    "C++",
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "FastAPI",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "PostgreSQL",
+    "MongoDB",
+    "Git",
+    "GitHub",
+    "Linux",
+    "HTML",
+    "CSS",
+    "Tailwind CSS"
+]
+
+
+
+
+
 app = FastAPI()
-
-
 @app.get("/")
 def home():
     return {
@@ -65,7 +94,27 @@ async def upload_resume(file: UploadFile):
     for page in reader.pages:
         extracted_text += page.extract_text()
 
+    
+    
+    found_skills = []
+
+    resume_text_lower = extracted_text.lower()
+
+    for skill in SKILLS_DATABASE:
+        if skill.lower() in resume_text_lower:
+            found_skills.append(skill)
+    # return {
+    #     "filename": file.filename,
+    #     "text": extracted_text[:1000]
+    # }
+    
+    
+    # updated return statements
+    
+    
     return {
-        "filename": file.filename,
-        "text": extracted_text[:1000]
-    }
+    "filename": file.filename,
+    "skills_found": found_skills,
+    "total_skills_found": len(found_skills)
+}
+   
