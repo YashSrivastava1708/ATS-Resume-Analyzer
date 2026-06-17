@@ -1,0 +1,9 @@
+cat > .gitignore << 'EOF'
+node_modules/
+.env
+__pycache__/
+.venv/
+dist/
+build/
+.next/
+EOF
