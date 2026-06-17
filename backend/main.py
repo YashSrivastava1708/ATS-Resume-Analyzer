@@ -1,8 +1,6 @@
 # from fastapi import FastAPI
 from pypdf import PdfReader
-from fastapi import FastAPI, UploadFile
-
-
+from fastapi import FastAPI, UploadFile, File, Form
 
 # skill dataset
 SKILLS_DATABASE = [
@@ -33,15 +31,29 @@ SKILLS_DATABASE = [
 #as of now, manually made, but will be extracted from the user when he uploads the JD
 
 
-JOB_SKILLS = [
-    "Python",
-    "React",
-    "FastAPI",
-    "Git",
-    "Docker",
-    "PostgreSQL",
-    "AWS"
-]
+# JOB_SKILLS = [
+#     "Python",
+#     "React",
+#     "FastAPI",
+#     "Git",
+#     "Docker",
+#     "PostgreSQL",
+#     "AWS"
+# ]
+
+#we will use helper function instead:::
+def extract_skills_from_text(text: str):
+    
+    found = []
+
+    text_lower = text.lower()
+
+    for skill in SKILLS_DATABASE:
+
+        if skill.lower() in text_lower:
+            found.append(skill)
+
+    return found
 
 
 
@@ -92,8 +104,17 @@ def version():
 
 # upload resume api with pdf reading feature
 
+# @app.post("/upload-resume")
+# async def upload_resume(file: UploadFile):
+
+# more sturctured format with the help of forms:
+
+
 @app.post("/upload-resume")
-async def upload_resume(file: UploadFile):
+async def upload_resume(
+    file: UploadFile = File(...),
+    job_description: str = Form(...)
+):
 
     content = await file.read()
 
@@ -108,57 +129,98 @@ async def upload_resume(file: UploadFile):
         extracted_text += page.extract_text()
 
     
-    
-    found_skills = []
+    # GOT REMOVED BECAUSE  NOW WE WILL COMPARE THE KEYWORDS FROM THE JD:
+#     found_skills = []
 
-    resume_text_lower = extracted_text.lower()
+#     resume_text_lower = extracted_text.lower()
 
-    for skill in SKILLS_DATABASE:
-        if skill.lower() in resume_text_lower:
-            found_skills.append(skill)
+#     for skill in SKILLS_DATABASE:
+#         if skill.lower() in resume_text_lower:
+#             found_skills.append(skill)
     
     
-    #comparision against a specific profile
+#     #comparision against a specific profile
+#     matched_skills = []
+
+#     for skill in JOB_SKILLS:
+
+#         if skill in found_skills:
+#             matched_skills.append(skill)
+    
+#     #missing skills:
+#     missing_skills = []
+#     for skill in JOB_SKILLS:
+#         if skill not in found_skills:
+#             missing_skills.append(skill)
+#     # return {
+#     #     "filename": file.filename,
+#     #     "text": extracted_text[:1000]
+#     # }
+    
+    
+#     # calculations of new parameters with thus arrived values
+    
+#     ats_score = int(
+#     (len(matched_skills) / len(JOB_SKILLS))
+#     * 100
+# )
+    
+    resume_skills = extract_skills_from_text(
+        extracted_text
+    )
+
+    job_skills = extract_skills_from_text(
+        job_description
+    )
+
     matched_skills = []
 
-    for skill in JOB_SKILLS:
+    for skill in job_skills:
 
-        if skill in found_skills:
+        if skill in resume_skills:
             matched_skills.append(skill)
-    
-    #missing skills:
+
+
     missing_skills = []
-    for skill in JOB_SKILLS:
-        if skill not in found_skills:
+
+    for skill in job_skills:
+
+        if skill not in resume_skills:
             missing_skills.append(skill)
-    # return {
+            
+    if len(job_skills) == 0:
+        ats_score = 0
+    else:
+        ats_score = int(
+            len(matched_skills)
+            / len(job_skills)
+            * 100
+        )
+        # updated return statements
+    #     return {
     #     "filename": file.filename,
-    #     "text": extracted_text[:1000]
+    #     "skills_found": found_skills,
+    #     "total_skills_found": len(found_skills)
     # }
     
     
-    # calculations of new parameters with thus arrived values
     
-    ats_score = int(
-    (len(matched_skills) / len(JOB_SKILLS))
-    * 100
-)
+    #more updated statements:
     
-    
-     # updated return statements
-#     return {
-#     "filename": file.filename,
-#     "skills_found": found_skills,
-#     "total_skills_found": len(found_skills)
-# }
-   
-   
-   
-   #more updated statements:
-   
+    #     return {
+    #     "filename": file.filename,
+    #     "ats_score": ats_score,
+    #     "matched_skills": matched_skills,
+    #     "missing_skills": missing_skills
+    # }
+
+    # MUCH MORE UPDATED AND RICHER OUTPUT
+
     return {
-    "filename": file.filename,
-    "ats_score": ats_score,
-    "matched_skills": matched_skills,
-    "missing_skills": missing_skills
-}
+        "filename": file.filename,
+        "ats_score": ats_score,
+        "resume_skills": resume_skills,
+        "job_skills": job_skills,
+        "matched_skills": matched_skills,
+        "missing_skills": missing_skills
+    }
