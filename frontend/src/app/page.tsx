@@ -19,7 +19,7 @@ export default function Home() {
   );
 }*/
 
-
+import ResumeUpload from "../components/ui/ResumeUpload";
 
 import Navbar from "../components/layout/Navbar";
 
@@ -44,15 +44,17 @@ export default function Home() {
     getting shortlisted.
   </p>
 
-  <div className="flex gap-4 mt-10">
+  {/* <div className="flex gap-4 mt-10">
     <button className="px-6 py-3 bg-black text-white rounded-lg">
       Upload Resume
-    </button>
-
-    <button className="px-6 py-3 border rounded-lg">
+    </button> */}
+    
+    {/* <button className="px-6 py-3 border rounded-lg">
       Learn More
     </button>
-  </div>
+  </div> */}
+  <ResumeUpload />
+
 
 </main>
     </>
