@@ -55,7 +55,7 @@ export default function Home() {
   </div> */}
   <ResumeUpload />
       {/* <ATSScoreCard/> */}
-      <ATSScoreCard score={85} />
+      <ATSScoreCard score={95} />
 
 </main>
     </>

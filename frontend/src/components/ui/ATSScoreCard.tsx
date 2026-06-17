@@ -36,6 +36,14 @@ type ATSScoreCardProps = {
 export default function ATSScoreCard({
   score,
 }: ATSScoreCardProps) {
+
+    let scoreColor = "text-red-600";
+
+if (score >= 90) {
+  scoreColor = "text-green-600";
+} else if (score >= 70) {
+  scoreColor = "text-yellow-500";
+}
   return (
     <div className="mt-12 w-full max-w-xl border rounded-2xl p-8 shadow-sm">
 
@@ -43,10 +51,14 @@ export default function ATSScoreCard({
         ATS Score
       </h2>
 
-      <p className="text-center text-5xl font-bold text-green-600 mt-4">
+      {/* <p className="text-center text-5xl font-bold text-green-600 mt-4">
         {score}%
-      </p>
+      </p> 
+    <p className={`text-center text-5xl font-bold mt-4 ${scoreColor}`}></p>*/}
 
+<p className={`text-center text-5xl font-bold mt-4 ${scoreColor}`}>
+  {score}%
+</p>
       <div className="mt-8">
         <h3 className="font-semibold mb-3">
           Matched Skills
